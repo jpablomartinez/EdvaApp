@@ -2,6 +2,7 @@ import 'package:edva/Models/place.dart';
 import 'package:edva/Utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PlaceCard extends StatelessWidget{
 
@@ -26,7 +27,7 @@ class PlaceCard extends StatelessWidget{
               margin: const EdgeInsets.symmetric(horizontal: 10),
               width: 40,
               height: 40,
-              child: const Icon(Icons.location_on, color: EdvaColors.apple, size: 40) //const FaIcon(FontAwesomeIcons.gps, color: EdvaColors.apple),
+              child: const Icon(Icons.location_on, color: EdvaColors.deYork, size: 40) //const FaIcon(FontAwesomeIcons.gps, color: EdvaColors.apple),
           ),
           Flexible(
             child: Column(
@@ -36,10 +37,10 @@ class PlaceCard extends StatelessWidget{
                 Text(
                   place.name,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: EdvaColors.mineralGreen, fontSize: 18, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.mineralGreen, fontSize: 18, fontWeight: FontWeight.bold))
                 ),
-                Text(place.address, style: const TextStyle(color: EdvaColors.como, fontSize: 13, fontWeight: FontWeight.w500)),
-                const Text('horarios: 08:00 - 13:00 / 16:00 - 19:00', style: TextStyle(color: EdvaColors.como, fontSize: 13, fontWeight: FontWeight.w400))
+                Text(place.address, style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontSize: 13, fontWeight: FontWeight.w500))),
+                Text('horarios: 08:00 - 13:00 / 16:00 - 19:00', style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontSize: 13, fontWeight: FontWeight.w400)))
               ],
             ),
           ),

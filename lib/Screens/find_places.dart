@@ -1,10 +1,12 @@
-import 'package:edva/Components/bottom_navigation.dart';
+import 'package:edva/Components/header.dart';
 import 'package:edva/Components/place_card.dart';
 import 'package:edva/Models/place.dart';
+import 'package:edva/Screens/layout.dart';
 import 'package:edva/Utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:edva/Utils/chile.dart' as chile_data;
 import 'dart:math' as math;
+import 'package:google_fonts/google_fonts.dart';
 
 class FindPlaces extends StatefulWidget{
 
@@ -33,7 +35,98 @@ class _FindPlaces extends State<FindPlaces>{
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
+    return Layout(
+      header: const Header(
+        title: 'Sedes',
+        subtitle: 'ult actualización: 08:00',
+      ),
+      child: Column(
+        children: [
+          Column(
+            children: [
+              Container(
+                  height: 43,
+                  width: size.width*0.85,
+                  padding: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(50)
+                  ),
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    underline: Container(),
+                    icon: Transform.rotate(
+                      angle: math.pi/2,
+                      child: const Icon(Icons.arrow_forward_ios_outlined, color: EdvaColors.mineralGreen, size: 18),
+                    ),
+                    value: _region,
+                    items: chile_data.regions.map<DropdownMenuItem<String>>((String v){
+                      return DropdownMenuItem<String>(
+                          value: v,
+                          child: Text(v, style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontSize: 16)))
+                      );
+                    }).toList(),
+                    hint: Text('regiones', style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontStyle: FontStyle.italic, fontSize: 14))),
+                    onChanged: (dynamic val){
+                      setState(() {
+                        _region = val;
+                        index = chile_data.regions.indexOf(val);
+                        _commune = chile_data.communes[index][0];
+                      });
+                    },
+                  )
+              ),
+              Container(
+                height: 43,
+                width: size.width*0.85,
+                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(50)
+                ),
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  underline: Container(),
+                  icon: Transform.rotate(
+                    angle: math.pi/2,
+                    child: const Icon(Icons.arrow_forward_ios_outlined, color: EdvaColors.mineralGreen, size: 18),
+                  ),
+                  value: _commune,
+                  items: chile_data.communes[index].map<DropdownMenuItem<String>>((String value){
+                    return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value, style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontSize: 16)))
+                    );
+                  }).toList(),
+                  hint: Text('comunas', style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontStyle: FontStyle.italic, fontSize: 14))),
+                  onChanged: (dynamic value){
+                    setState(() {
+                      _commune = value;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+          Container(
+            height: size.height*0.6,
+            decoration: const BoxDecoration(
+              color: EdvaColors.whiteIce,
+            ),
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+              itemCount: places.length,
+              itemBuilder: (context, i){
+                return PlaceCard(place: places[i]);
+              }
+            ),
+          )
+        ],
+      )
+    );
+    /*return Scaffold(
       backgroundColor: EdvaColors.whiteIce,
       body: SafeArea(
         child: Column(
@@ -164,42 +257,7 @@ class _FindPlaces extends State<FindPlaces>{
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        elevation: 0,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.search, color: EdvaColors.downy),
-              backgroundColor: EdvaColors.funGreen,
-              label: 'places'
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.settings, color: Colors.white, size: 26),
-              backgroundColor: EdvaColors.funGreen,
-              label: 'settings'
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.navigation, color: Colors.white),
-              backgroundColor: EdvaColors.funGreen,
-              label: 'navigation'
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.report_problem, color: Colors.white),
-              backgroundColor: EdvaColors.funGreen,
-              label: 'report'
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.help, color: Colors.white),
-              backgroundColor: EdvaColors.funGreen,
-              label: 'help'
-          ),
-        ],
-        currentIndex: 0,
-        selectedItemColor: EdvaColors.downy,
-
-      ),
-    );
+    );*/
   }
 
 }
