@@ -14,6 +14,8 @@ class Layout extends StatefulWidget{
 
 class _Layout extends State<Layout>{
 
+  int currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +36,51 @@ class _Layout extends State<Layout>{
         elevation: 0,
         showSelectedLabels: false,
         showUnselectedLabels: false,
+        onTap: (int index){
+          switch(index){
+            case 0:
+              if(currentIndex != 0){
+                setState(() {
+                  currentIndex = 0;
+                });
+                Navigator.popUntil(context, ModalRoute.withName('/'));
+              }
+              break;
+            case 1:
+              if(currentIndex != 1){
+                setState(() {
+                  currentIndex = 1;
+                });
+                Navigator.pushNamedAndRemoveUntil(context, '/settings', ModalRoute.withName('/'));
+                //Navigator.pushNamed(context, '/settings');
+              }
+              break;
+            case 2:
+              if(currentIndex != 2){
+                setState(() {
+                  currentIndex = 2;
+                });
+                Navigator.pushNamedAndRemoveUntil(context, '/navigator', ModalRoute.withName('/'));
+              }
+              break;
+            case 3:
+              if(currentIndex != 3){
+                setState(() {
+                  currentIndex = 3;
+                });
+                Navigator.pushNamedAndRemoveUntil(context, '/feedback', ModalRoute.withName('/'));
+              }
+              break;
+            case 4:
+              if(currentIndex != 4){
+                setState(() {
+                  currentIndex = 4;
+                });
+                Navigator.pushNamedAndRemoveUntil(context, '/help', ModalRoute.withName('/'));
+              }
+              break;
+          }
+        },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
               icon: Icon(Icons.search, color: EdvaColors.chestnutRose, size: 28),
@@ -61,7 +108,7 @@ class _Layout extends State<Layout>{
               label: 'help'
           ),
         ],
-        currentIndex: 0,
+        currentIndex: currentIndex,
         selectedItemColor: EdvaColors.chestnutRose,
       ),
     );

@@ -21,7 +21,7 @@ class Header extends StatelessWidget{
             children: [
               Text(title, style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.mineralGreen, fontSize: 27, fontWeight: FontWeight.bold))),
               subtitle != null ?
-              Text(subtitle!, style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.mineralGreen, fontSize: 14, fontWeight: FontWeight.w400)))
+              Text(subtitle!, style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.mineralGreen, fontSize: 14, fontWeight: FontWeight.bold)))
               :
               Container()
             ],

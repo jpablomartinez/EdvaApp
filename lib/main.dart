@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:edva/Utils/router.dart';
+import 'package:get/get.dart';
 
-void main() {
+void main() async{
+
   runApp(const EdvaApp());
 }
 
@@ -10,7 +12,7 @@ class EdvaApp extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'EDVA',
       theme: ThemeData(

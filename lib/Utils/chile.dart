@@ -1,7 +1,28 @@
+import 'package:edva/Models/region.dart';
+
+
+///lat and long from every chilean's region was taken from https://latitude.to/map/cl/chile/regions
+List<Region> regionLocation = [
+  Region(latitude: -18.57336, longitude: -69.46106),
+  Region(latitude: -20, longitude: -69.33333),
+  Region(latitude: -23.5, longitude: -69.0),
+  Region(latitude: -27.5, longitude: -70.0),
+  Region(latitude: -30.75, longitude: -71.0),
+  Region(latitude: -32.75, longitude: -71.33333),
+  Region(latitude: -33.33333, longitude: -70.66667),
+  Region(latitude: -34.5, longitude: -71.0),
+  Region(latitude: -35.5, longitude: -71.5),
+  Region(latitude: -36.722574, longitude: -71.762248),
+  Region(latitude: -37.0, longitude: -72.5),
+  Region(latitude: -38.5, longitude: -72.0),
+  Region(latitude: -40.01499, longitude: -72.51526),
+  Region(latitude: -41.75, longitude: -73.0),
+  Region(latitude: -46.5, longitude: -73.5),
+  Region(latitude: -52.50026, longitude: -73.00067),
+];
+
 ///array with regions and cities on Chile
 ///taken and modify from https://gist.github.com/juanbrujo/0fd2f4d126b3ce5a95a7dd1f28b3d8dd
-///
-///
 
 const List<String> regions = [
   'Arica y Parinacota',
@@ -11,7 +32,7 @@ const List<String> regions = [
   'Coquimbo',
   'Valparaíso',
   'Metropolitana de Santiago',
-  'Libertador Gral. Bernardo O’Higgins',
+  'Libertador Bernando O\'Higgins',
   'Maule',
   'Ñuble',
   'Biobío',
@@ -57,7 +78,7 @@ const List<List<String>> communes = [
   [
     "Algarrobo",
     "Cabildo",
-    "Calera",
+    "La Calera",
     "Calle Larga",
     "Cartagena",
     "Casablanca",
@@ -150,7 +171,7 @@ const List<List<String>> communes = [
   ],
   [
     "Chimbarongo",
-    "Chépica",
+    "Chepica",
     "Codegua",
     "Coinco",
     "Coltauco",

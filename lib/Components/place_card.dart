@@ -1,7 +1,7 @@
 import 'package:edva/Models/place.dart';
 import 'package:edva/Utils/colors.dart';
+import 'package:edva/Utils/global_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PlaceCard extends StatelessWidget{
@@ -35,12 +35,12 @@ class PlaceCard extends StatelessWidget{
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  place.name,
+                  GlobalFunctions.parseText(place.name),
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.mineralGreen, fontSize: 18, fontWeight: FontWeight.bold))
+                  style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.mineralGreen, fontSize: 16, fontWeight: FontWeight.bold))
                 ),
                 Text(place.address, style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontSize: 13, fontWeight: FontWeight.w500))),
-                Text('horarios: 08:00 - 13:00 / 16:00 - 19:00', style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontSize: 13, fontWeight: FontWeight.w400)))
+                //Text('horarios: 08:00 - 13:00 / 16:00 - 19:00', style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontSize: 13, fontWeight: FontWeight.w400)))
               ],
             ),
           ),

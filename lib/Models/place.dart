@@ -9,23 +9,26 @@ class Place {
   String region = '';
   String city = '';
   String address = '';
-  String? hours;
 
   Place({
     required this.name,
     required this.address,
     required this.region,
     required this.city,
-    this.hours
   });
 
-  factory Place.fromJson(Map<String, String> object){
+  factory Place.fromJson(Map<String, dynamic> object){
     return Place(
-        name: object['name'] ?? '',
+        name: object['placeName'] ?? '',
         address: object['address'] ?? '',
         region: object['region'] ?? '',
-        city: object.containsKey('hours') ? object['hours'] ?? '' : ''
+        city: object['commune'] ?? ''
     );
+  }
+
+  @override
+  toString(){
+    return '$name / $address';
   }
 
 }
