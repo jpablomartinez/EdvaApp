@@ -6,7 +6,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:edva/Models/place.dart';
 import 'package:edva/Utils/routes.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SyncController {
 
@@ -29,6 +28,7 @@ class SyncController {
     return hasConn;
   }
 
+  ///get vaccinate places on chilean's region
   Future<List<Place>> getVaccinatePlacesFromRegion(String region) async {
     List<Place> vaccinatePlaces = [];
     try{
@@ -44,11 +44,48 @@ class SyncController {
       else return vaccinatePlaces;
     }
     catch(e,s){
-      print(e);
-      print(s);
       return vaccinatePlaces;
     }
-
   }
+
+  ///post user feedback
+  Future<bool> postFeedback(String type, String comments) async {
+    try{
+      Dio dio = Dio();
+      Map m = {
+        'type': type,
+        'comments': comments
+      };
+      Response response = await dio.post(Routes.postFeedback, data: m).timeout(const Duration(seconds: 30));
+      return response.statusCode == 200 && response.data['op'] == 1;
+    }
+    catch(e,s){
+      return false;
+    }
+  }
+
+  ///post experience
+  Future<bool> postExperience(String region, String commune, String place, int waitTime, int dose, int score) async {
+    try{
+      Dio dio = Dio();
+      FormData data = FormData.fromMap({
+        'region': region,
+        'commune': commune,
+        'place': place,
+        'waitTime': waitTime,
+        'dose': dose,
+        'score': score
+
+      });
+      Response response = await dio.post(Routes.postExperience, data: data).timeout(const Duration(seconds: 30));
+      return response.statusCode == 200 && response.data['op'] == 1;
+    }
+    catch(e,s){
+      print(e);
+      return false;
+    }
+  }
+
+
 
 }

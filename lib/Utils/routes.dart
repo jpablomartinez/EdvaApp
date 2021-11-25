@@ -1,7 +1,12 @@
+
 class Routes {
 
   static const String apiRoute = 'https://edva-39tyo.ondigitalocean.app/v1/places';
 
-  static const String getPlacesFromRegion = 'https://edva-39tyo.ondigitalocean.app/v1/places/region';
+  static const String getPlacesFromRegion = '$apiRoute/region';
+
+  static const String postFeedback = '$apiRoute/feedback';
+
+  static const String postExperience = '$apiRoute/experience';
 
 }

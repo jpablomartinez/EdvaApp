@@ -19,6 +19,7 @@ class _Layout extends State<Layout>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
           //margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
