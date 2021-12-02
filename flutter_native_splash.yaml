@@ -1,3 +1,4 @@
 flutter_native_splash:
-  image: assets/images/logo.png
-  color: "424874"
+  image: assets/images/splash.png
+  color: "2C3471"
+  android_gravity: bottom

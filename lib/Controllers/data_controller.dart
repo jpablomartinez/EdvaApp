@@ -13,12 +13,25 @@ class DataController extends GetxController{
   bool foundedData = false;
   bool locationServiceEnabled = false;
   DateTime startApp = DateTime.now();
+  late Place selectedPlace;
+  int currentIndex = 0;
+  String lastUpdate = '08:00, 24/12/2021';
+
+  void selectPlace(Place p){
+    selectedPlace = p;
+    Get.toNamed('/place');
+  }
+
+  void addExperience(Place p){
+    selectedPlace = p;
+    Get.toNamed('/experience');
+  }
 
   void updateListPlacesByRegionCommune(String commune){
     List<Place> tmp = allPlacesByRegion.where((place) => place.city == commune).toList();
     List<Widget> _places = [];
     for(var place in tmp){
-      Widget infoPlace = PlaceCard(place: place);
+      Widget infoPlace = PlaceCard(place: place, onTapFunction: ()=>selectPlace(place), experienceFunction: ()=> addExperience(place));
       _places.add(infoPlace);
     }
     placesWidgets = _places;

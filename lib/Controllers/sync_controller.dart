@@ -65,18 +65,17 @@ class SyncController {
   }
 
   ///post experience
-  Future<bool> postExperience(String region, String commune, String place, int waitTime, int dose, int score) async {
+  Future<bool> postExperience(int placeId, int waitTime, int dose, int score, String vaccine) async {
     try{
       Dio dio = Dio();
-      FormData data = FormData.fromMap({
-        'region': region,
-        'commune': commune,
-        'place': place,
+      Map data = {
+        'place_id': placeId,
         'waitTime': waitTime,
         'dose': dose,
-        'score': score
-
-      });
+        'score': score,
+        'vaccine': vaccine
+      };
+      print(data);
       Response response = await dio.post(Routes.postExperience, data: data).timeout(const Duration(seconds: 30));
       return response.statusCode == 200 && response.data['op'] == 1;
     }

@@ -3,6 +3,7 @@
 import 'package:edva/Components/header.dart';
 import 'package:edva/Components/loaders.dart';
 import 'package:edva/Controllers/sync_controller.dart';
+import 'package:edva/Dialogs/dialogs.dart';
 import 'package:edva/Dialogs/toast.dart';
 import 'package:edva/Screens/layout.dart';
 import 'package:edva/Utils/colors.dart';
@@ -26,51 +27,22 @@ class _Feedback extends State<UserFeedback>{
   SyncController syncController = SyncController();
   String feedbackType = 'Problema con sede';
 
-  Future<void> showSyncDialog() async {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context){
-          return ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 300),
-            child: AlertDialog(
-              title: const Text(''),
-              contentPadding: const EdgeInsets.all(0),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Loader.spinningLines(),
-                  const SizedBox(height: 20),
-                  Container(
-                      margin: const EdgeInsets.only(top:5, bottom:20),
-                      child: const Text('Por favor espere...', style: TextStyle(color: EdvaColors.killarney, fontSize: 15))
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-    );
-  }
-
   bool fieldsAreValid(){
     return formKey.currentState!.validate();
   }
 
   Future<void> postFeedback() async {
+    Navigator.pop(context);
+    Dialogs.showSyncDialog(context);
+    FocusScope.of(context).requestFocus(FocusNode());
     if(fieldsAreValid()){
-      showSyncDialog();
-      bool isConnected = await syncController.isConnected();
-      if(isConnected){
+      bool availableInternet = await syncController.checkConnection();
+      if(availableInternet){
         bool a = await syncController.postFeedback(feedbackType, commentsController.text);
-        if(a) basicToast('Muchas gracias por compartir información');
-        else basicToast('Ocurrió un error al compartir tu información. Intenta más tarde');
+        if(a) Dialogs.successAlertDialog(context);
+        else Dialogs.errorAlertDialog(context);
       }
       else basicToast('Hay un problema con tu conexión a internet.');
-      Navigator.pop(context);
     }
   }
 
@@ -119,7 +91,7 @@ class _Feedback extends State<UserFeedback>{
                         child: Text(value, style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontSize: 14)))
                     );
                   }).toList(),
-                  hint: Text('Feedback', style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontStyle: FontStyle.italic, fontSize: 14))),
+                  hint: Text('Feedback', style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontSize: 14))),
                   onChanged: (dynamic value){
                     setState(() {
                       feedbackType = value;
@@ -144,7 +116,7 @@ class _Feedback extends State<UserFeedback>{
                 decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Escribe tus comentarios',
-                    hintStyle: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontSize: 14, fontStyle: FontStyle.italic)),
+                    hintStyle: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontSize: 14)),
                     hintMaxLines: 8
                 ),
                 maxLines: 8,
@@ -153,12 +125,12 @@ class _Feedback extends State<UserFeedback>{
             const SizedBox(height: 20),
             Center(
               child: GestureDetector(
-                onTap: () async => await postFeedback(),
+                onTap: ()=> Dialogs.questionAlertDialog(context, postFeedback),
                 child: Container(
                   height: 48,
                   width: 210,
                   decoration: BoxDecoration(
-                      color: EdvaColors.killarney,
+                      color: EdvaColors.greenPea,
                       borderRadius: BorderRadius.circular(50)
                   ),
                   child: Center(

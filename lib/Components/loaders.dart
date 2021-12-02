@@ -5,7 +5,7 @@ class Loader {
 
   static spinningLines(){
     return const SpinKitSpinningLines(
-        color: EdvaColors.chestnutRose,
+        color: EdvaColors.salmonPearl,
         size: 100
     );
   }

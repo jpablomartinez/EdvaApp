@@ -23,4 +23,19 @@ class GlobalFunctions {
     return text;
   }
 
+  static int getWaitTimeIndex(String a){
+    if(a == 'menos de 1 hora') return 0;
+    else if(a == 'entre 1 y 2 hrs') return 1;
+    else if(a == 'más de 2 horas') return 2;
+    else return -1;
+  }
+
+  static int getDoseIndex(String a){
+    if(a == 'Primera dosis') return 0;
+    else if(a == 'Segunda dosis') return 1;
+    else if(a == 'Refuerzo') return 2;
+    else return -1;
+  }
+
+
 }

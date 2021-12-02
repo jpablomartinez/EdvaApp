@@ -12,4 +12,6 @@ class EdvaColors {
   static const killarney = Color(0xff424874);
   static const chestnutRose = Color(0xffD05C63);
   static const deYork = Color(0xff6886C5);
+  static const greenPea = Color(0xff2C3471);
+  static const salmonPearl = Color(0xffF44954);
 }

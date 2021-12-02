@@ -31,10 +31,6 @@ class Help extends StatelessWidget {
                     content: help.searching
                 ),
                 HelpEntry(
-                    title: 'Navegación',
-                    content: help.navigation
-                ),
-                HelpEntry(
                     title: 'Reportar problema',
                     content: help.problem
                 ),

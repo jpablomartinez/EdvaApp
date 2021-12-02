@@ -32,14 +32,14 @@ const List<String> regions = [
   'Coquimbo',
   'Valparaíso',
   'Metropolitana de Santiago',
-  'Libertador Bernando O\'Higgins',
+  'Libertador General Bernando O\'Higgins',
   'Maule',
   'Ñuble',
   'Biobío',
   'Araucanía',
   'Los Ríos',
   'Los Lagos',
-  'Aisén del Gral. Carlos Ibáñez del Campo',
+  'Aysén del General Carlos Ibáñez del Campo',
   'Magallanes y de la Antártica Chilena',
 ];
 
@@ -375,7 +375,7 @@ const List<List<String>> communes = [
     "San Pablo",
   ],
   [
-    "Aisén",
+    "Aysén",
     "Chile Chico",
     "Cisnes",
     "Cochrane",
@@ -388,7 +388,7 @@ const List<List<String>> communes = [
   ],
   [
     "Antártica",
-    "Cabo de Hornos (Ex Navarino)",
+    "Cabo de Hornos",
     "Laguna Blanca",
     "Natales",
     "Porvenir",
@@ -821,11 +821,11 @@ const List<Map> all = [
     ],
   },
   {
-    'name': "Aisén del Gral. Carlos Ibáñez del Campo",
+    'name': "Aysén",
     'romanNumber': "XI",
     'abbreviation': "AI",
     'communes': [
-      "Aisén",
+      "Aysén",
       "Chile Chico",
       "Cisnes",
       "Cochrane",
@@ -838,7 +838,7 @@ const List<Map> all = [
     ],
   },
   {
-    'name': "Magallanes y de la Antártica Chilena",
+    'name': "Magallanes y la Antártica Chilena",
     'romanNumber': "XII",
     'abbreviation': "MA",
     'communes': [

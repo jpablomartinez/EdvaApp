@@ -90,8 +90,9 @@ class _FindPlaces extends State<FindPlaces> with SingleTickerProviderStateMixin{
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Layout(
-        header: const Header(
+        header: Header(
           title: 'Sedes',
+          subtitle: 'ult act: ${dataController.lastUpdate}',
         ),
         child: FutureBuilder(
           future: loadData,
@@ -173,7 +174,7 @@ class _FindPlaces extends State<FindPlaces> with SingleTickerProviderStateMixin{
                         ],
                       ),
                       Container(
-                          height: size.height*0.62,
+                          height: size.height*0.60,
                           decoration: const BoxDecoration(
                             color: EdvaColors.whiteIce,
                           ),
