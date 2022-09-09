@@ -26,7 +26,7 @@ class Header extends StatelessWidget{
               Container()
             ],
           ),
-          Text('#Cuidemonos', style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.mineralGreen, fontSize: 18, fontWeight: FontWeight.w500)))
+          Text('#Cuidémonos', style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.mineralGreen, fontSize: 18, fontWeight: FontWeight.w600)))
         ],
       ),
     );

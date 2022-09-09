@@ -5,14 +5,14 @@ import 'package:edva/Utils/chile.dart';
 class GlobalFunctions {
 
   static int getNearestRegion(double latitude, double longitude){
-    if(regionLocation.first.latitude < latitude) return 0;
-    else if(regionLocation.last.latitude > latitude) return regionLocation.length - 1;
+    if(regionLocation.first.latitude <= latitude) return 0;
+    else if(regionLocation.last.latitude >= latitude) return regionLocation.length - 1;
     else {
       for(int i = 0; i < regionLocation.length - 1; i++){
         if(regionLocation[i].latitude > latitude && latitude > regionLocation[i+1].latitude) return i;
       }
     }
-    return -1;
+    return 6;
   }
 
   static String parseText(String text){
@@ -35,6 +35,12 @@ class GlobalFunctions {
     else if(a == 'Segunda dosis') return 1;
     else if(a == 'Refuerzo') return 2;
     else return -1;
+  }
+
+  static String parseScore(double score){
+    String tmp = '$score'.split('.')[1];
+    if(int.parse(tmp) == 0) return score.toStringAsFixed(0);
+    return '$score';
   }
 
 

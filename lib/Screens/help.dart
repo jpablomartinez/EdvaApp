@@ -14,11 +14,12 @@ class Help extends StatelessWidget {
     return Layout(
       header: const Header(
         title: 'Ayuda',
+        subtitle: 'versión: ${help.appVersion}',
       ),
       child: Column(
         children: [
           SizedBox(
-            height: size.height*0.77,
+            height: size.height*0.75,
             child: ListView(
               shrinkWrap: true,
               children: const [

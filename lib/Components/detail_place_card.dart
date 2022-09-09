@@ -46,7 +46,7 @@ class DetailPlaceCard extends StatelessWidget{
                     margin: const EdgeInsets.symmetric(vertical: 10),
                     child: Text('horarios: ${place.time}', style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontSize: 12, fontWeight: FontWeight.w400)))
                 ),
-                Score(score: place.score, amount: place.amount)
+                ScoreWidget(score: place.score, amount: place.amount)
               ],
             ),
           ),
@@ -58,16 +58,16 @@ class DetailPlaceCard extends StatelessWidget{
 
 }
 
-class Score extends StatelessWidget {
+class ScoreWidget extends StatelessWidget {
 
   final double score;
   final int amount;
 
-  const Score({Key? key,
+  const ScoreWidget({Key? key,
     required this.score,
     required this.amount
   }) : super(key: key);
-
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -75,7 +75,7 @@ class Score extends StatelessWidget {
       child: Row(
         children: [
            const Icon(Icons.favorite, color: EdvaColors.greenPea, size: 15),
-           Text('$score/5 ($amount)', style: const TextStyle(color: EdvaColors.como, fontSize: 13, fontWeight: FontWeight.w500))
+           Text(' ${GlobalFunctions.parseScore(score)} / 5 ($amount)', style: const TextStyle(color: EdvaColors.como, fontSize: 13, fontWeight: FontWeight.w500))
         ],
       ),
     );

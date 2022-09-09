@@ -29,6 +29,20 @@ class Place {
     required this.long
   });
 
+  Place.base(){
+    placeId = -1;
+    name = '';
+    address = '';
+    region = '';
+    city = '';
+    time = '';
+    score = -1;
+    amount = -1;
+    lat = 0;
+    long = 0;
+  }
+
+
   factory Place.fromJson(Map<String, dynamic> object){
     return Place(
         placeId: object['place_id'] ?? 0,

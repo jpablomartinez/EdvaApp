@@ -1,4 +1,4 @@
-package com.example.edva
+package com.menestrello.edva
 
 import io.flutter.embedding.android.FlutterActivity
 

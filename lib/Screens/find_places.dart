@@ -31,27 +31,34 @@ class _FindPlaces extends State<FindPlaces> with SingleTickerProviderStateMixin{
   Future? loadData;
   Future? vaccinatePlaces;
   SyncController syncController = SyncController();
-  String _region = chile_data.regions[0];
-  int index = 0;
-  String _commune = chile_data.communes[0][0];
-  bool searching = true;
+  bool availableInternet = false;
 
   Future<bool> init() async {
-    String nearestRegion = '';
-    dataController.locationServiceEnabled = await locationController.handlePermission();
-    if(dataController.locationServiceEnabled){
-      final position = await locationController.getCurrentPosition();
-      dataController.latitude = position.latitude;
-      dataController.longitude = position.longitude;
-      index = GlobalFunctions.getNearestRegion(dataController.latitude, dataController.longitude);
-      nearestRegion = chile_data.regions[index];
-      _region = chile_data.regions[index];
-      _commune = chile_data.communes[index][0];
-      dataController.allPlacesByRegion = await syncController.getVaccinatePlacesFromRegion(nearestRegion);
-      if(dataController.allPlacesByRegion.isNotEmpty){
-        dataController.foundedData = true;
-        dataController.updateListPlacesByRegionCommune(_commune);
-        searching = false;
+    if(dataController.needToUpdateList){
+      String nearestRegion = '';
+      dataController.locationServiceEnabled = await locationController.handlePermission();
+      availableInternet = await syncController.checkConnection();
+      if(availableInternet){
+        if(dataController.locationServiceEnabled){
+          final position = await locationController.getCurrentPosition();
+          dataController.latitude = position.latitude;
+          dataController.longitude = position.longitude;
+        }
+        else{
+          dataController.latitude = -18.57336;
+          dataController.longitude = -69.46106;
+        }
+        dataController.selectedIndex = GlobalFunctions.getNearestRegion(dataController.latitude, dataController.longitude);
+        nearestRegion = chile_data.regions[dataController.selectedIndex];
+        dataController.region = chile_data.regions[dataController.selectedIndex];
+        dataController.commune = chile_data.communes[dataController.selectedIndex][0];
+        dataController.allPlacesByRegion = await syncController.getVaccinatePlacesFromRegion(nearestRegion);
+        if(dataController.allPlacesByRegion.isNotEmpty){
+          dataController.foundedData = true;
+          dataController.updateListPlacesByRegionCommune(dataController.commune);
+          dataController.searchingVaccinatePlaces = false;
+          dataController.needToUpdateList = false;
+        }
       }
     }
     animationController!.forward();
@@ -59,22 +66,32 @@ class _FindPlaces extends State<FindPlaces> with SingleTickerProviderStateMixin{
   }
 
   Future<void> getVaccinatePlacesByRegion() async{
-    bool isConnected = await syncController.isConnected();
-    if(isConnected){
-      dataController.allPlacesByRegion = await syncController.getVaccinatePlacesFromRegion(_region);
+    availableInternet = await syncController.isConnected();
+    if(availableInternet){
+      dataController.allPlacesByRegion = await syncController.getVaccinatePlacesFromRegion(dataController.region);
       if(dataController.allPlacesByRegion.isNotEmpty){
         dataController.foundedData = true;
-        dataController.updateListPlacesByRegionCommune(_commune);
+        dataController.needToUpdateList = false;
+        dataController.updateListPlacesByRegionCommune(dataController.commune);
+      }
+      else{
+        dataController.clearPlacesByRegionCommune();
       }
       setState(() {
-        searching = false;
+        dataController.searchingVaccinatePlaces = false;
+      });
+    }
+    else{
+      dataController.needToUpdateList = true;
+      setState(() {
+        dataController.foundedData = false;
       });
     }
   }
 
   @override
   void initState(){
-    animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1500));
+    animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
     animation = CurvedAnimation(parent: animationController!, curve: Curves.easeIn);
     loadData = init();
     super.initState();
@@ -100,11 +117,52 @@ class _FindPlaces extends State<FindPlaces> with SingleTickerProviderStateMixin{
             if(snapshot.hasData){
               return FadeTransition(
                   opacity: animation,
-                  child: Column(
-                    children: [
-                      Column(
-                        children: [
-                          Container(
+                  child: dataController.foundedData ?
+                    Column(
+                      children: [
+                        !dataController.locationServiceEnabled ?
+                        const Text('servicio de localización no permitido', style: TextStyle(color: EdvaColors.mineralGreen, fontWeight: FontWeight.w500))
+                        :
+                        Container(),
+                        Column(
+                          children: [
+                            Container(
+                                height: 43,
+                                width: size.width*0.85,
+                                padding: const EdgeInsets.all(12),
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(50)
+                                ),
+                                child: DropdownButton<String>(
+                                  isExpanded: true,
+                                  underline: Container(),
+                                  icon: Transform.rotate(
+                                    angle: math.pi/2,
+                                    child: const Icon(Icons.arrow_forward_ios_outlined, color: EdvaColors.mineralGreen, size: 18),
+                                  ),
+                                  value: dataController.region,
+                                  items: chile_data.regions.map<DropdownMenuItem<String>>((String v){
+                                    return DropdownMenuItem<String>(
+                                        value: v,
+                                        child: Text(v, style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontSize: 16)))
+                                    );
+                                  }).toList(),
+                                  hint: Text('regiones', style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontStyle: FontStyle.italic, fontSize: 14))),
+                                  onChanged: (dynamic val) async{
+                                    setState(() {
+                                      dataController.region = val;
+                                      dataController.selectedIndex = chile_data.regions.indexOf(val);
+                                      dataController.commune = chile_data.communes[dataController.selectedIndex][0];
+                                      dataController.searchingVaccinatePlaces = true;
+                                    });
+                                    dataController.needToUpdateList = true;
+                                    await getVaccinatePlacesByRegion();
+                                  },
+                                )
+                            ),
+                            Container(
                               height: 43,
                               width: size.width*0.85,
                               padding: const EdgeInsets.all(12),
@@ -120,103 +178,85 @@ class _FindPlaces extends State<FindPlaces> with SingleTickerProviderStateMixin{
                                   angle: math.pi/2,
                                   child: const Icon(Icons.arrow_forward_ios_outlined, color: EdvaColors.mineralGreen, size: 18),
                                 ),
-                                value: _region,
-                                items: chile_data.regions.map<DropdownMenuItem<String>>((String v){
+                                value: dataController.commune,
+                                items: chile_data.communes[dataController.selectedIndex].map<DropdownMenuItem<String>>((String value){
                                   return DropdownMenuItem<String>(
-                                      value: v,
-                                      child: Text(v, style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontSize: 16)))
+                                      value: value,
+                                      child: Text(value, style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontSize: 16)))
                                   );
                                 }).toList(),
-                                hint: Text('regiones', style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontStyle: FontStyle.italic, fontSize: 14))),
-                                onChanged: (dynamic val) async{
+                                hint: Text('comunas', style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontStyle: FontStyle.italic, fontSize: 14))),
+                                onChanged: (dynamic value){
                                   setState(() {
-                                    _region = val;
-                                    index = chile_data.regions.indexOf(val);
-                                    _commune = chile_data.communes[index][0];
-                                    searching = true;
+                                    dataController.commune = value;
+                                    dataController.updateListPlacesByRegionCommune(value);
                                   });
-                                  await getVaccinatePlacesByRegion();
                                 },
-                              )
-                          ),
-                          Container(
-                            height: 43,
-                            width: size.width*0.85,
-                            padding: const EdgeInsets.all(12),
-                            margin: const EdgeInsets.symmetric(vertical: 8),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(50)
-                            ),
-                            child: DropdownButton<String>(
-                              isExpanded: true,
-                              underline: Container(),
-                              icon: Transform.rotate(
-                                angle: math.pi/2,
-                                child: const Icon(Icons.arrow_forward_ios_outlined, color: EdvaColors.mineralGreen, size: 18),
                               ),
-                              value: _commune,
-                              items: chile_data.communes[index].map<DropdownMenuItem<String>>((String value){
-                                return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value, style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontSize: 16)))
-                                );
-                              }).toList(),
-                              hint: Text('comunas', style: GoogleFonts.lato(textStyle: const TextStyle(color: EdvaColors.como, fontStyle: FontStyle.italic, fontSize: 14))),
-                              onChanged: (dynamic value){
-                                setState(() {
-                                  _commune = value;
-                                  dataController.updateListPlacesByRegionCommune(value);
-                                });
-                              },
                             ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                          height: size.height*0.60,
-                          decoration: const BoxDecoration(
-                            color: EdvaColors.whiteIce,
-                          ),
-                          child: !searching ?
-                            GetBuilder<DataController>(
-                              builder: (_) =>
-                              dataController.placesWidgets.isNotEmpty ?
-                              ListView(
-                                  shrinkWrap: true,
-                                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                                  children: dataController.placesWidgets
-                              ) :
-                               Container(
-                                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                                child: const SizedBox(
+                          ],
+                        ),
+                        Container(
+                            height: size.height*0.58,
+                            decoration: const BoxDecoration(
+                              color: EdvaColors.whiteIce,
+                            ),
+                            child: !dataController.searchingVaccinatePlaces ?
+                              GetBuilder<DataController>(
+                                builder: (_) =>
+                                dataController.placesWidgets.isNotEmpty ?
+                                ListView(
+                                    shrinkWrap: true,
+                                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                                    children: dataController.placesWidgets
+                                ) :
+                                 Container(
+                                  margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                                  child: const SizedBox(
+                                    height: 350,
+                                    child: Text(
+                                        'La comuna seleccionada no tiene lugares de vacunación inscritos',
+                                        style: TextStyle(color: EdvaColors.mineralGreen, fontSize: 16, fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                )
+                              )
+                              :
+                              Center(
+                                child: SizedBox(
                                   height: 350,
-                                  child: Text(
-                                      'La comuna seleccionada no tiene lugares de vacunación inscritos',
-                                      style: TextStyle(color: EdvaColors.mineralGreen, fontSize: 16, fontWeight: FontWeight.bold),
-                                      textAlign: TextAlign.center,
+                                  child: Column(
+                                    children:  [
+                                      Loader.spinningLines(),
+                                      const SizedBox(
+                                          height: 30,
+                                          child: Text('Obteniendo sedes de vacunación', style: TextStyle(color: EdvaColors.mineralGreen, fontSize: 15, fontWeight: FontWeight.w500))
+                                      ),
+                                    ],
                                   ),
                                 ),
                               )
-                            )
-                            :
-                            Center(
-                              child: SizedBox(
-                                height: 350,
-                                child: Column(
-                                  children:  [
-                                    Loader.spinningLines(),
-                                    const SizedBox(
-                                        height: 30,
-                                        child: Text('Obteniendo sedes de vacunación', style: TextStyle(color: EdvaColors.mineralGreen, fontSize: 15, fontWeight: FontWeight.w500))
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                      )
-                    ],
-                  )
+                        )
+                      ],
+                    )
+                    :
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                      child: Column(
+                        children: [
+                          const Icon(Icons.sentiment_dissatisfied, color: EdvaColors.mineralGreen, size: 120),
+                          const SizedBox(height: 30),
+                          !availableInternet ?
+                          const Text('Error al cargar las sedes de vacunación.\n No hay internet disponible', style: TextStyle(color: EdvaColors.como, fontSize: 16, fontWeight: FontWeight.bold), textAlign: TextAlign.center)
+                          :
+                          availableInternet && !dataController.foundedData ?
+                          const Text('Error al cargar las sedes de vacunación.\n No hay datos disponibles', style: TextStyle(color: EdvaColors.como, fontSize: 16, fontWeight: FontWeight.bold), textAlign: TextAlign.center)
+                          :
+                          const Text('Error al cargar las sedes de vacunación.\n ', style: TextStyle(color: EdvaColors.como, fontSize: 16, fontWeight: FontWeight.bold), textAlign: TextAlign.center)
+                        ],
+                      ),
+                    )
               );
             }
             else {

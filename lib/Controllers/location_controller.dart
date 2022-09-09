@@ -10,7 +10,10 @@ class LocationController {
     serviceEnabled = await geolocatorPlatform.isLocationServiceEnabled();
     if(!serviceEnabled) return false;
     permission = await geolocatorPlatform.checkPermission();
-    if(permission == LocationPermission.deniedForever) return false;
+    if(permission == LocationPermission.deniedForever || permission == LocationPermission.denied){
+      permission = await geolocatorPlatform.requestPermission();
+      return permission == LocationPermission.always || permission == LocationPermission.whileInUse;
+    }
     return true;
   }
 

@@ -9,4 +9,6 @@ class Routes {
 
   static const String postExperience = '$apiRoute/experience';
 
+  static const String getScore = '$apiRoute/experience/get_score';
+
 }

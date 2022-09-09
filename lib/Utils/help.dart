@@ -10,3 +10,5 @@ const String problem = 'Ayúdanos a diseñar una solución con los menos errores
 const String helpUs = 'Ayuda a más personas a que puedan organizar su ida a vacunar indicándonos cuánto tiempo te demoraste en la sede y tu experiencia en ella. Esta información nos ayudará a incrementar los datos útiles para los usuarios. Sea conciente y solo comparta información real';
 
 const String ads = 'Me encantaría brindarles una aplicación libre de anuncios, no obstante la mantención del servidor es complicada. Una vez pueda mantener el servidor sin ayuda extra eliminaré la publicidad de la aplicación';
+
+const String appVersion = '0.9.8';

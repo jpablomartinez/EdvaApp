@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:edva/Models/place.dart';
+import 'package:edva/Models/score.dart';
 import 'package:edva/Utils/routes.dart';
 
 class SyncController {
@@ -75,13 +76,26 @@ class SyncController {
         'score': score,
         'vaccine': vaccine
       };
-      print(data);
       Response response = await dio.post(Routes.postExperience, data: data).timeout(const Duration(seconds: 30));
       return response.statusCode == 200 && response.data['op'] == 1;
     }
     catch(e,s){
-      print(e);
       return false;
+    }
+  }
+
+  ///get score from selected place
+  ///show average from all experiences collected from users and show how many are they
+  Future<Score> getScore(int placeId) async {
+    try{
+      Response response = await Dio().get('${Routes.getScore}/$placeId');
+      if(response.statusCode == 200 && response.data['op'] == 1){
+        return Score.fromJson(response.data['data']);
+      }
+      else return Score(score: 0, opinions: 0);
+    }
+    catch(e,s){
+      return Score(score: 0, opinions: 0);
     }
   }
 
